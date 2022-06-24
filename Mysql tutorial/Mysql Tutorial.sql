@@ -1,4 +1,4 @@
--- Lesson 1: SELECT overall
+# Lesson 1: SELECT overall
 
 USE classicmodels; # comment
 SHOW tables; -- this is also comment
@@ -52,11 +52,12 @@ WHERE
 ORDER BY CustomerName desc -- default: asc
 LIMIT 0, 4;
 
--- Lesson 2: Operations
+# Lesson 2: Operations
 /*
 연산자 의미
 +, -, *, /	각각 더하기, 빼기, 곱하기, 나누기
 %, MOD	나머지
+div Quotient
 IS	양쪽이 모두 TRUE 또는 FALSE
 IS NOT	한쪽은 TRUE, 한쪽은 FALSE
 AND, &&	양쪽이 모두 TRUE일 때만 TRUE
@@ -73,5 +74,81 @@ LIKE '... % ...'	0~N개 문자를 가진 패턴
 LIKE '... _ ...'	_ 갯수만큼의 문자를 가진 패턴
 */
 
+-- arithematic operation
+SELECT 1 + 2;
+SELECT 5-2.5 as difference;
+SELECT 3*(2+4)/2, 'hello';
+select 10%3,10/3,10 div 3;
 
+SELECT 'ABC' + 3; -- in mysql, text in arithematic operation treated as 0
+SELECT "aa"*3;
+SELECT '1' + '002'*3; -- text consisted of numbers treated as numbers
 
+DESC orderdetails;
+select * from orderdetails;
+SELECT ordernumber + quantityordered FROM orderdetails;
+
+desc products;
+select productname, buyprice, buyprice/2 as halfprice, buyprice*0.8 as "20%discount" from products;
+
+-- True/False operation
+SELECT TRUE,FALSE,true,false;
+SELECT !true, not 1, !false, not false;
+select 0=true, 1=true,0=false,1=false; -- = is same with IS
+select * from customers where true;
+select * from customers where false;
+select true is true, false is not true, (true is false) is not true;
+
+select true and false, true && true, true or false, false || false; -- and : true only if both true. or: true if any one of two is true.
+select 2+3 = 6 or 2*3=6;
+
+SELECT 1 = 1, !(1 <> 1), NOT (1 < 2), 1 > 0 IS NOT FALSE, 2>=2; -- != is <> 
+SELECT 'A' = 'A', 'A' != 'B', 'A' < 'B', 'A' > 'B';
+SELECT 'Apple' < 'Banana' OR 1 = 2 IS FALSE; -- lexicographical order
+SELECT 'a' = 'A'; -- uppper = lower true!
+
+desc products;
+SELECT
+  ProductName, buyPrice,
+  buyPrice > 50 AS EXPENSIVE,
+  NOT buyPrice > 50 AS cheap
+FROM Products;
+
+SELECT 5 between 1 and 10; 
+select 'banana' not between 'apple' and 'camera';
+
+select * from orderdetails
+where productcode between "s10" and "s20";
+
+select 1 between 1 and 2; -- including 1 and 2
+
+select * from customers
+where customername between "b" and "c";
+
+SELECT 1+2 in (2,3,4), 'hello' in (1,true,'hello');
+SELECT * FROM customers
+where city in ('torino','paris','portland','madrid');
+
+SELECT
+  'HELLO' LIKE 'hel%',
+  'HELLO' LIKE 'H%',
+  'HELLO' LIKE 'H%O',
+  'HELLO' LIKE '%O',
+  'HELLO' LIKE '%HELLO%', -- %: 0 ~ N characters. Note that % includes 0 characters.
+  'HELLO' LIKE '%H',
+  'HELLO' LIKE 'L%';
+
+SELECT
+  'HELLO' LIKE 'HEL__',
+  'HELLO' LIKE 'h___O',
+  'HELLO' LIKE 'HE_LO',
+  'HELLO' LIKE '_____',
+  'HELLO' LIKE '_HELLO',
+  'HELLO' LIKE 'HEL_',
+  'HELLO' LIKE 'H_O';
+
+SELECT * FROM Employees
+WHERE jobtitle LIKE '%mark%'; 
+
+SELECT * FROM OrderDetails
+WHERE productcode LIKE '%s18%'
